@@ -19,17 +19,20 @@ app.get('/', (req, res, next) => {
 })
 
 // get latest listings
-app.get('/listings/latest', (req, res, next) => {
+app.post('/listings/latest', (req, res, next) => {
     let url = config.urls.latestListings;
+    let start = req.body.start;
+    let limit = req.body.limit;
     superagent
-    .get(url)
+    .get(`${url}?start=${start}&limit=${limit}`)
     .set('X-CMC_PRO_API_KEY', config.apiKey)
     .end((err, resp) => {
         // Calling the end function will send the request
         if(err) {
             return res.json({
                 status: err.status,
-                success: false
+                success: false,
+                error_message: resp.body.status.error_message
             })
         };
         return res.json({
