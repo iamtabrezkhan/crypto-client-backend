@@ -4,6 +4,7 @@ const cors = require('cors');
 let port = process.env.PORT || 3000;
 const superagent = require('superagent');
 const config = require('./config');
+const path = require('path');
 
 const app = express();
 
@@ -12,6 +13,10 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(cors());
+
+app.get('*', (req, res, next) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+})
 
 // root
 app.get('/', (req, res, next) => {
